@@ -1,12 +1,8 @@
-import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
-
-const handler = async (_req: Request): Promise<Response> => {
+Deno.serve(async (_req: Request) => {
     try {
-        // Lekérdezzük a Deno szerver külső IP címét
         const response = await fetch("https://api.ipify.org?format=json");
         const data = await response.json();
 
-        // JSON kimenet összeállítása
         const jsonOutput = JSON.stringify({
             ip: data.ip,
             provider: "Deno Deploy",
@@ -25,6 +21,4 @@ const handler = async (_req: Request): Promise<Response> => {
             headers: { "content-type": "application/json; charset=utf-8" },
         });
     }
-};
-
-serve(handler);
+});
