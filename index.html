@@ -81,33 +81,8 @@
             color: var(--accent-color);
             word-break: break-all;
             font-family: monospace;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             cursor: pointer;
-        }
-
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            text-align: left;
-            border-top: 1px solid var(--border-color);
-            padding-top: 16px;
-            margin-top: 8px;
-        }
-
-        .detail-item {
-            font-size: 0.85rem;
-        }
-
-        .detail-title {
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            margin-bottom: 2px;
-        }
-
-        .detail-value {
-            font-weight: 500;
-            color: var(--text-color);
         }
 
         .btn {
@@ -194,17 +169,6 @@
             <div class="ip-label">IP Címed (kattints a másoláshoz)</div>
             <div id="loader" class="loader"></div>
             <div id="ip-address" title="Kattints a másoláshoz">Betöltés...</div>
-            
-            <div class="details-grid">
-                <div class="detail-item">
-                    <div class="detail-title">Ország</div>
-                    <div id="country" class="detail-value">-</div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-title">Kód (CC)</div>
-                    <div id="cc" class="detail-value">-</div>
-                </div>
-            </div>
         </div>
 
         <button class="btn" id="refresh-btn" onclick="getIpData()">
@@ -216,12 +180,10 @@
     <div id="toast" class="toast">IP cím másolva a vágólapra!</div>
 
     <script>
-        const API_URL = 'https://api.myip.com/';
+        const API_URL = 'https://api.ipify.org?format=json';
 
         async function getIpData() {
             const ipElement = document.getElementById('ip-address');
-            const countryElement = document.getElementById('country');
-            const ccElement = document.getElementById('cc');
             const loader = document.getElementById('loader');
             const errorDiv = document.getElementById('error');
 
@@ -238,9 +200,8 @@
 
                 const data = await response.json();
                 
+                // JSON kimenet: { "ip": "..." }
                 ipElement.textContent = data.ip || 'Ismeretlen';
-                countryElement.textContent = data.country || 'Nincs adat';
-                ccElement.textContent = data.cc || 'Nincs adat';
 
             } catch (error) {
                 console.error('Hiba történt az IP lekérdezése során:', error);
