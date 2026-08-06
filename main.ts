@@ -3,13 +3,11 @@ Deno.serve(async (_req: Request) => {
         const response = await fetch("https://api.ipify.org?format=json");
         const data = await response.json();
 
-        const jsonOutput = JSON.stringify({
+        return new Response(JSON.stringify({
             ip: data.ip,
             provider: "Deno Deploy",
             status: "success"
-        }, null, 2);
-
-        return new Response(jsonOutput, {
+        }, null, 2), {
             headers: { 
                 "content-type": "application/json; charset=utf-8",
                 "Access-Control-Allow-Origin": "*" 
