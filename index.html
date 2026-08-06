@@ -2,28 +2,88 @@
 <html lang="hu">
 <head>
   <meta charset="UTF-8">
-  <title>IP Cím Lekérdező</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3x IP Cím Lekérdező</title>
   <style>
-    body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #121212; color: white; }
-    .box { text-align: center; border: 1px solid #333; padding: 2rem; border-radius: 8px; }
-    h1 { font-size: 2.5rem; color: #00d1b2; }
+    body { 
+      font-family: system-ui, -apple-system, sans-serif; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+      margin: 0; 
+      background: #0f172a; 
+      color: #f8fafc; 
+    }
+    .container { 
+      background: #1e293b; 
+      padding: 2rem; 
+      border-radius: 12px; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+      width: 90%; 
+      max-width: 400px; 
+      text-align: center; 
+    }
+    h2 { margin-top: 0; color: #38bdf8; font-size: 1.4rem; }
+    .ip-card { 
+      background: #334155; 
+      padding: 1rem; 
+      margin: 1rem 0; 
+      border-radius: 8px; 
+      border-left: 4px solid #38bdf8; 
+      text-align: left; 
+    }
+    .service-name { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: bold; }
+    .ip-value { font-size: 1.3rem; font-weight: bold; color: #f1f5f9; margin-top: 0.3rem; font-family: monospace; }
+    .error { color: #f87171; }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h2>Az Ön IP-címe:</h2>
-    <h1 id="ip">Lekérés...</h1>
+  <div class="container">
+    <h2>IP Cím Ellenőrző (3 Forrás)</h2>
+
+    <div class="ip-card">
+      <div class="service-name">1. MyIP.com</div>
+      <div class="ip-value" id="ip-myip">Lekérés...</div>
+    </div>
+
+    <div class="ip-card">
+      <div class="service-name">2. Ipify.org</div>
+      <div class="ip-value" id="ip-ipify">Lekérés...</div>
+    </div>
+
+    <div class="ip-card">
+      <div class="service-name">3. IPAPI.co</div>
+      <div class="ip-value" id="ip-ipapi">Lekérés...</div>
+    </div>
   </div>
 
   <script>
-    // Közvetlenül a látogató böngészőjéből kérjük le az IP-t
+    // 1. Forrás: MyIP.com
+    fetch('https://api.myip.com')
+      .then(res => res.json())
+      .then(data => document.getElementById('ip-myip').innerText = data.ip)
+      .catch(() => {
+        document.getElementById('ip-myip').innerText = 'Hiba / AdBlocker tiltja';
+        document.getElementById('ip-myip').classList.add('error');
+      });
+
+    // 2. Forrás: Ipify.org
     fetch('https://api.ipify.org?format=json')
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('ip').innerText = data.ip;
-      })
-      .catch(error => {
-        document.getElementById('ip').innerText = 'Nem sikerült az IP lekérése';
+      .then(res => res.json())
+      .then(data => document.getElementById('ip-ipify').innerText = data.ip)
+      .catch(() => {
+        document.getElementById('ip-ipify').innerText = 'Hiba / AdBlocker tiltja';
+        document.getElementById('ip-ipify').classList.add('error');
+      });
+
+    // 3. Forrás: IPAPI.co
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => document.getElementById('ip-ipapi').innerText = data.ip)
+      .catch(() => {
+        document.getElementById('ip-ipapi').innerText = 'Hiba / AdBlocker tiltja';
+        document.getElementById('ip-ipapi').classList.add('error');
       });
   </script>
 </body>
