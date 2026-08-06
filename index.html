@@ -12,33 +12,19 @@
 <body>
   <div class="box">
     <h2>Az Ön IP-címe:</h2>
-    <h1 id="ip">Betöltés...</h1>
+    <h1 id="ip">Lekérés...</h1>
   </div>
 
   <script>
-    // IP szolgáltatók listája
-    const apis = [
-      () => fetch('https://api.myip.com').then(res => res.json()).then(d => d.ip),
-      () => fetch('https://api.ipify.org?format=json').then(res => res.json()).then(d => d.ip),
-      () => fetch('https://ipapi.co/json/').then(res => res.json()).then(d => d.ip)
-    ];
-
-    async function getIP() {
-      for (const apiCall of apis) {
-        try {
-          const ip = await apiCall();
-          if (ip) {
-            document.getElementById('ip').innerText = ip;
-            return;
-          }
-        } catch (e) {
-          console.warn('API hiba, próbálkozás a következővel...');
-        }
-      }
-      document.getElementById('ip').innerText = 'Nem sikerült az IP lekérése (AdBlocker tilthatja)';
-    }
-
-    getIP();
+    // Közvetlenül a látogató böngészőjéből kérjük le az IP-t
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('ip').innerText = data.ip;
+      })
+      .catch(error => {
+        document.getElementById('ip').innerText = 'Nem sikerült az IP lekérése';
+      });
   </script>
 </body>
 </html>
