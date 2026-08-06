@@ -15,7 +15,30 @@
     <h1 id="ip">Betöltés...</h1>
   </div>
 
-  <!-- Itt hívjuk be a különálló JavaScript fájlt -->
-  <script src="script.js"></script>
+  <script>
+    // IP szolgáltatók listája
+    const apis = [
+      () => fetch('https://api.myip.com').then(res => res.json()).then(d => d.ip),
+      () => fetch('https://api.ipify.org?format=json').then(res => res.json()).then(d => d.ip),
+      () => fetch('https://ipapi.co/json/').then(res => res.json()).then(d => d.ip)
+    ];
+
+    async function getIP() {
+      for (const apiCall of apis) {
+        try {
+          const ip = await apiCall();
+          if (ip) {
+            document.getElementById('ip').innerText = ip;
+            return;
+          }
+        } catch (e) {
+          console.warn('API hiba, próbálkozás a következővel...');
+        }
+      }
+      document.getElementById('ip').innerText = 'Nem sikerült az IP lekérése (AdBlocker tilthatja)';
+    }
+
+    getIP();
+  </script>
 </body>
 </html>
